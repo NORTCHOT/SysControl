@@ -1,11 +1,28 @@
 import os
 import shutil
 import subprocess
+import sys
 import tkinter as tk
 from tkinter import font, messagebox
 import winreg as reg
 from ttkbootstrap import Style
 import threading
+import ctypes
+
+
+def check_admin_rights():
+    try:
+        is_admin = ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        is_admin = False
+    if not is_admin:
+        messagebox.showerror("Упс!", "Программа должна быть запущена от имени администратора.")
+        sys.exit()
+
+
+def restart_as_admin():
+    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, ' '.join(sys.argv), None, 1)
+
 
 def ensure_registry_key_exists(key, sub_key):
     try:
@@ -101,6 +118,7 @@ def reboot_pc():
     except Exception as e:
         messagebox.showerror("Ошибка", str(e))
 
+
 style = Style('darkly')
 root = style.master
 root.title("SysControl")
@@ -132,12 +150,24 @@ system_info_button = None
 for idx, (text, command) in enumerate(buttons):
     btn = tk.Button(root, text=text, command=command, font=body_font, bg=button_bg, fg=button_fg)
     row, col = divmod(idx, 2)
-    btn.grid(row=row + 1, column=col, padx=20, pady=10, sticky="ew", ipadx=10, ipady=5)
+    btn.grid(row=row + 1, column=col, padx=20, pady=10, sticky="nsew", ipadx=10, ipady=5)
 
     if text == "Информация о системе":
         system_info_button = btn
 
+
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
+root.grid_rowconfigure(3, weight=1)
+root.grid_rowconfigure(4, weight=1)
+
 footer_label = tk.Label(root, text="Made by NRT Corp. for you :)", font=footer_font, anchor="e", bg="#2d2d2d", fg="#ffffff")
 footer_label.grid(row=5, column=0, columnspan=2, padx=20, pady=10, sticky="e")
 
-root.mainloop()
+if __name__ == "__main__":
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        restart_as_admin()
+    else:
+        root.mainloop()
