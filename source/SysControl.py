@@ -153,9 +153,9 @@ def show_about():
 
     info_text = (
         "Made by NRT Corp.\n"
-        "\n" # Можно было как то по другому? В прочем, работает, та и хер с ним
+        "\n" # Можно было как то по другому? В прочем, работает, ну и ладно
         "Создано: NORTCHOT\n"
-        "Бета тестеры: Klodska(KlodskaTeam), Kanat"
+        "Бета тестеры: Klodska(KlodskaTeam), Kanat, Twaiger, martinwin10b1903"
     )
     info_label = tk.Label(about_window, text=info_text, font=footer_font, fg="#ffffff", bg="#2d2d2d", justify="left")
     info_label.pack(pady=10, anchor="w", padx=20)
